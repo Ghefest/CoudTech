@@ -1,0 +1,19 @@
+aws ec2 create-key-pair --key-name chervonkov --output text > chervonkov.pem
+
+aws ec2 wait key-pair-exists --key-names chervonkov
+aws ec2 describe-key-pairs  --key-names chervonkov
+
+aws ec2 create-security-group --group-name chervonkov=task-2-SG --description "chervonkov=task-2-SG security group for SSH access" --vpc-id vpc-09078b6eb7563998e
+
+aws ec2 authorize-security-group-ingress --group-id sg-0d9855dc3ac8a7406 --protocol tcp --port 22 --cidr 0.0.0.0/0
+aws ec2 authorize-security-group-ingress --group-id sg-0d9855dc3ac8a7406 --protocol tcp --port 80 --cidr 0.0.0.0/0
+
+aws ec2 run-instances --image-id ami-66eec506  --count 1 --instance-type t2.micro --key-name chervonkov --security-group-ids sg-0d9855dc3ac8a7406 --subnet-id subnet-0e17a2cc6199fc8ab
+
+# INSTANCE_ID = i-05593f7c4c1cc0c90
+
+aws ec2 create-tags --resources i-05593f7c4c1cc0c90 --tags Key=Role,Value="Web-Server"
+
+aws ec2 describe-instances --instance-ids i-05593f7c4c1cc0c90
+
+# PUBLIC_IP = 13.56.82.194

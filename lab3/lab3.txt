@@ -1,0 +1,33 @@
+aws ec2 create-security-group  --group-name chervonkov-lab-3-SG --description "Security group for Lab3" --vpc-id vpc-989a54fe
+
+# GROUP_ID = sg-07bfb767854721518
+
+aws ec2 create-key-pair --key-name keylab3 --output text > keylab3.pem
+
+ aws ec2 authorize-security-group-ingress --group-id sg-07bfb767854721518 --protocol tcp --port 22 --cidr 0.0.0.0/0
+ aws ec2 authorize-security-group-ingress --group-id sg-07bfb767854721518 --protocol tcp --port 80 --cidr 0.0.0.0/0
+ aws ec2 authorize-security-group-ingress --group-id sg-07bfb767854721518 --protocol tcp --port 443 --cidr 0.0.0.0/0
+
+aws ec2 describe-subnets
+
+# SUBNET = subnet-f7a11891
+
+aws ec2 modify-subnet-attribute --subnet-id subnet-f7a11891 --map-public-ip-on-launch
+
+aws ec2 create-route-table --vpc-id vpc-989a54fe
+
+RT_ID = rtb-09559f3e35bb90d8c
+
+aws ec2 describe-internet-gateways
+
+# IGW = igw-5e19d539
+
+aws ec2 create-route --destination-cidr-block 0.0.0.0/0 --gateway-id igw-5e19d539 --route-table-id rtb-09559f3e35bb90d8c
+
+aws ec2 associate-route-table --route-table-id rtb-09559f3e35bb90d8c --subnet-id subnet-f7a11891
+
+aws ec2 run-instances --image-id ami-66eec506 --count 1 --instance-type t2.micro --key-name keylab3 --security-group-ids sg-07bfb767854721518 --subnet-id subnet-f7a11891 --user-data file://data.sh
+
+aws ec2 create-image --instance-id i-0136b887a03ef44e5 --name "Security group MB3" --description "Apache"
+
+aws ec2 describe-instances --instance-ids i-0136b887a03ef44e5

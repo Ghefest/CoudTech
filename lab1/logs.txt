@@ -1,0 +1,21 @@
+aws ec2 create-vpc --cidr-block 10.0.0.0/16
+
+aws ec2 create-subnet --vpc-id vpc-2f09a348 --cidr-block 10.0.1.0/24
+as ec2 create-tags --resources vpc-09078b6eb7563998e --tags Key=Name,Value="chervonkov-task-2"
+
+aws ec2 create-tags --resources vpc-09078b6eb7563998e --tags Key=Name,Value="chervonkov-task-2"
+aws ec2 create-internet-gateway
+aws ec2 attach-internet-gateway --vpc-id vpc-09078b6eb7563998e --internet-gateway-id igw-06ccdbae27c0bd82e
+aws ec2 create-tags --resources igw-06ccdbae27c0bd82e --tags Key=Name,Value="chervonkov-task-2-igw"
+
+
+aws ec2 create-subnet --cidr-block 10.0.1.0/24 --vpc-id vpc-09078b6eb7563998e
+aws ec2 modify-subnet-attribute --subnet-id subnet-0e17a2cc6199fc8ab --map-public-ip-on-launch
+aws ec2 create-tags --resources subnet-0e17a2cc6199fc8ab --tags Key=Name,Value="chervonkov-task-2-SB"
+
+
+aws ec2 create-route-table --vpc-id vpc-09078b6eb7563998e
+aws ec2 create-tags --resources rtb-029b7c97b8c52ba05 --tags Key=Name,Value="chervonkov-task-2-rt"
+
+aws ec2 create-route --destination-cidr-block 0.0.0.0/0 --gateway-id igw-06ccdbae27c0bd82e --route-table-id rtb-029b7c97b8c52ba05
+aws ec2 associate-route-table --route-table-id rtb-029b7c97b8c52ba05 --subnet-id subnet-0e17a2cc6199fc8ab

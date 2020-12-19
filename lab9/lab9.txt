@@ -1,0 +1,11 @@
+aws ecs create-cluster --cluster-name fargate-cluster
+
+aws ecs register-task-definition --cli-input-json file://fargate-cluster.json
+
+# arn:aws:ecs:us-west-1:734391628361:task-definition/sample-fargate:1
+
+aws ecs create-service --cluster fargate-cluster --service-name fargate-service --task-definition sample-fargate:1 --desired-count 1 --launch-type "FARGATE" --network-configuration "awsvpcConfiguration={subnets=[subnet-f7a11891],securityGroups=[sg-07bfb767854721518],assignPublicIp=ENABLED}"
+
+aws ecs list-services --cluster fargate-cluster
+
+# arn:aws:ecs:us-west-1:734391628361:service/fargate-cluster/fargate-service
